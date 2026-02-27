@@ -6,9 +6,13 @@ package cmd
 import (
 	"fmt"
 	"strconv"
+	"strings"
 
+	"github.com/EvertsRozz/timetracker/internal/store"
 	"github.com/spf13/cobra"
 )
+
+var createFlag bool
 
 // logCmd represents the log command
 var logCmd = &cobra.Command{
@@ -17,18 +21,39 @@ var logCmd = &cobra.Command{
 	Long:  `Add a log entry to a project. Automatically adds the current time to the log.`,
 	Args:  cobra.RangeArgs(2, 3),
 	Run: func(cmd *cobra.Command, args []string) {
-		projName := args[0]
+		s, err := store.Load()
+		if err != nil {
+			return
+		}
+
+		projectName := strings.TrimSpace(args[0])
 		minutes64, err := strconv.ParseUint(args[1], 10, 16)
 		if err != nil {
-			fmt.Printf("❌ Invalid minutes '%s': %v\n", args[1], err)
 			return
 		}
 		minutes := uint16(minutes64)
 
+		note := ""
+		if len(args) > 2 {
+			note = strings.TrimSpace(args[2])
+		}
+
+		// Find existing OR create new
+		proj := s.FindOrCreate(projectName, createFlag) // Pass flag
+
+		proj.AddLog(minutes, note)
+		if err := s.Save(); err != nil {
+			return
+		}
+
+		fmt.Printf("Logged %d min to %s (Total: %d min)\n",
+			minutes, proj.Name, proj.TotalTime)
+		return
 	},
 }
 
 func init() {
+	logCmd.Flags().BoolVarP(&createFlag, "create", "c", false, "create project if doesn't exist")
 	rootCmd.AddCommand(logCmd)
 
 	// Here you will define your flags and configuration settings.

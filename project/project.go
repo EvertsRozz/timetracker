@@ -13,13 +13,13 @@ type Project struct {
 }
 
 type Log struct {
-	Minutes uint
+	Minutes uint16
 	Note    string
 	Date    time.Time
 }
 
-func (p *Project) AddLog(minutes uint, note string) {
-	p.TotalTime += minutes
+func (p *Project) AddLog(minutes uint16, note string) {
+	p.TotalTime += uint(minutes)
 
 	p.Logs = append(p.Logs, Log{
 		Minutes: minutes,

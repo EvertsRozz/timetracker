@@ -1,0 +1,16 @@
+{
+  "projects": [
+    {
+      "name": "datorium",
+      "wage": 0,
+      "total_time": 60,
+      "logs": [
+        {
+          "Minutes": 60,
+          "Note": "test",
+          "Date": "2026-02-27T16:30:01.433786+02:00"
+        }
+      ]
+    }
+  ]
+}
