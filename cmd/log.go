@@ -39,7 +39,11 @@ var logCmd = &cobra.Command{
 		}
 
 		// Find existing OR create new
-		proj := s.FindOrCreate(projectName, createFlag) // Pass flag
+		proj, err := s.FindOrCreate(projectName, createFlag) // Pass flag
+		if err != nil {
+			fmt.Printf("Project %v not found", projectName)
+			return
+		}
 
 		proj.AddLog(minutes, note)
 		if err := s.Save(); err != nil {

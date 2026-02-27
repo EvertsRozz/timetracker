@@ -2,7 +2,7 @@ package store
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
 	"os"
 
 	"github.com/EvertsRozz/timetracker/project"
@@ -34,10 +34,5 @@ func (s *Store) FindOrCreate(name string, create bool) (*project.Project, error)
 		}
 	}
 
-	fmt.Printf("❌ Project '%s' not found. Use -c to create.\n", name)
-
-	// proj := &project.Project{Name: name} // Default wage=0
-	// s.Projects = append(s.Projects, *proj)
-	// fmt.Printf("Created new project '%s'\n Configure it later using config", name)
-	// return proj
+	return nil, errors.New("Project doesn't exist")
 }
