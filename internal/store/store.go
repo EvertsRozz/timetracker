@@ -27,20 +27,17 @@ func (s *Store) Save() error {
 	return os.WriteFile("tracker.json", data, 0644)
 }
 
-func (s *Store) FindOrCreate(name string, create bool) *project.Project {
+func (s *Store) FindOrCreate(name string, create bool) (*project.Project, error) {
 	for i := range s.Projects {
 		if s.Projects[i].Name == name {
-			return &s.Projects[i]
+			return &s.Projects[i], nil
 		}
 	}
 
-	if !create {
-		fmt.Printf("❌ Project '%s' not found. Use -c to create.\n", name)
-		os.Exit(1)
-	}
+	fmt.Printf("❌ Project '%s' not found. Use -c to create.\n", name)
 
-	proj := &project.Project{Name: name} // Default wage=0
-	s.Projects = append(s.Projects, *proj)
-	fmt.Printf("Created new project '%s'\n Configure it later using config", name)
-	return proj
+	// proj := &project.Project{Name: name} // Default wage=0
+	// s.Projects = append(s.Projects, *proj)
+	// fmt.Printf("Created new project '%s'\n Configure it later using config", name)
+	// return proj
 }
