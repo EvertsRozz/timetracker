@@ -27,7 +27,7 @@ func (s *Store) Save() error {
 	return os.WriteFile("tracker.json", data, 0644)
 }
 
-func (s *Store) FindOrCreate(name string, create bool) (*project.Project, error) {
+func (s *Store) Find(name string, create bool) (*project.Project, error) {
 	for i := range s.Projects {
 		if s.Projects[i].Name == name {
 			return &s.Projects[i], nil
@@ -35,4 +35,19 @@ func (s *Store) FindOrCreate(name string, create bool) (*project.Project, error)
 	}
 
 	return nil, errors.New("Project doesn't exist")
+}
+
+func (s *Store) Create(name string, wage float32) (*project.Project, error) {
+	for i := range s.Projects {
+		if s.Projects[i].Name == name {
+			return nil, errors.New("Project with name already exists")
+		}
+	}
+
+	newProj, err := project.NewProject(name, wage)
+	if err != nil {
+		return nil, err
+	}
+	s.Projects = append(s.Projects, *newProj)
+	return newProj, nil
 }

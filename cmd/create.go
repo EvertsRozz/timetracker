@@ -5,22 +5,36 @@ package cmd
 
 import (
 	"fmt"
+	"strconv"
+	"strings"
 
+	"github.com/EvertsRozz/timetracker/internal/store"
 	"github.com/spf13/cobra"
 )
 
 // createCmd represents the create command
 var createCmd = &cobra.Command{
-	Use:   "create",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Use:   "create NAME [WAGE]",
+	Short: "Create a new project instance",
+	Args:  cobra.RangeArgs(1, 2),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("create called")
+		s, err := store.Load()
+		if err != nil {
+			return
+		}
+
+		projName := strings.TrimSpace(args[0])
+		wage, _ := strconv.ParseFloat(args[1], 32)
+
+		proj, err := s.Create(projName, float32(wage))
+		if err != nil {
+			return
+		}
+		if err := s.Save(); err != nil {
+			return
+		}
+
+		fmt.Printf("Project instance named %v saved with wage of %v", proj.Name, proj.Wage)
 	},
 }
 

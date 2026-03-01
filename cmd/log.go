@@ -38,8 +38,8 @@ var logCmd = &cobra.Command{
 			note = strings.TrimSpace(args[2])
 		}
 
-		// Find existing OR create new
-		proj, err := s.FindOrCreate(projectName, createFlag) // Pass flag
+		// Find existing
+		proj, err := s.Find(projectName, createFlag) // Pass flag
 		if err != nil {
 			fmt.Printf("Project %v not found \n", projectName)
 			return
@@ -56,7 +56,6 @@ var logCmd = &cobra.Command{
 }
 
 func init() {
-	logCmd.Flags().BoolVarP(&createFlag, "create", "c", false, "create project if doesn't exist")
 	rootCmd.AddCommand(logCmd)
 
 	// Here you will define your flags and configuration settings.
