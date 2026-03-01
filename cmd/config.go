@@ -1,7 +1,7 @@
 /*
 Copyright © 2026 NAME HERE <EMAIL ADDRESS>
 */
-package project
+package cmd
 
 import (
 	"fmt"
